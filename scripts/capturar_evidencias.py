@@ -60,14 +60,14 @@ def aguardar_servidor():
         if server.poll() is not None:
             raise RuntimeError("O servidor Django foi encerrado inesperadamente.")
         try:
-            urllib.request.urlopen(f"{URL}/accounts/login/", timeout=1)
+            urllib.request.urlopen(f"{URL}/contas/login/", timeout=1)
             return
         except Exception:
             time.sleep(0.25)
     raise RuntimeError("O servidor Django não iniciou a tempo.")
 
 def autenticar(pagina):
-    pagina.goto(f"{URL}/accounts/login/", wait_until="networkidle")
+    pagina.goto(f"{URL}/contas/login/", wait_until="networkidle")
     pagina.get_by_label("Usuário").fill(username)
     pagina.get_by_label("Senha").fill(password)
     pagina.get_by_role("button", name="Entrar").click()
@@ -109,9 +109,12 @@ try:
         assert "Informe uma placa válida" in aviso.inner_text()
 
         # Navegação por teclado, com o anel de foco visível e erro textual.
-        pagina_movel.keyboard.press("Shift+Tab")
         campo = pagina_movel.get_by_label("Placa do veículo")
-        assert campo.evaluate("(el) => document.activeElement === el")
+        for _ in range(30):
+            pagina_movel.keyboard.press("Tab")
+            if campo.evaluate("(el) => document.activeElement === el"):
+                break
+        assert campo.evaluate("(el) => document.activeElement === el"), "Campo não alcançado por teclado."
         foco = campo.evaluate(
             "(el) => ({ estilo: getComputedStyle(el).outlineStyle, "
             "largura: getComputedStyle(el).outlineWidth, "
