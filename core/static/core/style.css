@@ -31,6 +31,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .link-claro{color:#fff;background:rgba(255,255,255,.07);border:1px solid #566b7f;padding:9px 17px;border-radius:9px;min-height:43px;font-weight:650;cursor:pointer}
 .link-claro:hover{background:rgba(255,255,255,.15)}
 .estrutura{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:calc(100vh - 82px)}
+.estrutura.sem-menu{display:block}
 .menu{background:var(--navy-2);color:#cedae6;padding:27px 14px;display:flex;flex-direction:column;gap:4px;border-right:1px solid #294056}
 .menu-grupo{margin:16px 13px 7px;color:#9fb3c7;text-transform:uppercase;letter-spacing:.14em;font-size:.67rem;font-weight:800}
 .menu-grupo:first-child{margin-top:4px}
@@ -163,7 +164,7 @@ tbody tr:hover{background:#f8fbfd}
   .grade{grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
   .card-link{padding:19px;min-height:165px}
   .card-link .seta{top:20px;right:18px}
-  .seção-cabecalho{align-items:start}
+  .secao-cabecalho{align-items:start}
 }
 @media(max-width:440px){
   .brand span{max-width:138px}
