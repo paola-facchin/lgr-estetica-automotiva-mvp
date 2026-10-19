@@ -37,7 +37,7 @@ class FinanceiroForm(StyledModelForm):
 class PlacaForm(forms.Form):
     placa = forms.CharField(label='Placa do veículo', max_length=10,
         help_text='Digite 7 caracteres. Exemplos: ABC1234 ou ABC1D23.',
-        widget=forms.TextInput(attrs={'placeholder': 'ABC1D23', 'autocapitalize': 'characters', 'class': 'campo', 'autocomplete': 'off'}))
+        widget=forms.TextInput(attrs={'placeholder': 'ABC1D23', 'autocapitalize': 'characters', 'class': 'campo', 'autocomplete': 'off', 'aria-describedby': 'placa-ajuda'}))
 
     def clean_placa(self):
         placa = normalizar_placa(self.cleaned_data['placa'])
