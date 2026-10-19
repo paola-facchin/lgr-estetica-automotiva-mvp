@@ -28,7 +28,7 @@
     {% endif %}
   </header>
 
-  <div class="estrutura">
+  <div class="estrutura{% if not user.is_authenticated %} sem-menu{% endif %}">
     {% if user.is_authenticated %}
     <nav class="menu" aria-label="Menu principal">
       <p class="menu-grupo">Visão geral</p>
