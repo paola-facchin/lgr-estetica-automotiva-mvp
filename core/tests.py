@@ -12,6 +12,21 @@ class PlacaTests(TestCase):
         self.assertTrue(PlacaForm({'placa': 'abc1d23'}).is_valid())
         self.assertFalse(PlacaForm({'placa': '123'}).is_valid())
 
+    
+    def test_rejeita_caracteres_invalidos_na_placa(self):
+        placas_invalidas = [
+            'ABC@1234',
+            'ABC!1234',
+            'ABC_1234',
+        ]
+
+        for placa in placas_invalidas:
+            with self.subTest(placa=placa):
+                formulario = PlacaForm({'placa': placa})
+                self.assertFalse(formulario.is_valid())
+                self.assertIn('placa', formulario.errors)
+
+
     def test_impede_placa_duplicada(self):
         cliente = Cliente.objects.create(nome='Cliente de teste', telefone='11999999999')
         Veiculo.objects.create(cliente=cliente, placa='ABC1D23', marca='Fiat', modelo='Argo')
