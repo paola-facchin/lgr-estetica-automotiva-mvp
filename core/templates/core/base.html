@@ -1,0 +1,8 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}LGR Gestão{% endblock %}</title><link rel="stylesheet" href="{% static 'core/style.css' %}"></head>
+<body><a class="skip-link" href="#conteudo">Pular para conteúdo</a>
+<header class="topo"><div class="brand"><strong>LGR</strong><span>Estética Automotiva · Gestão</span></div>
+{% if user.is_authenticated %}<div class="usuario"><span>Usuário: {{ user.username }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="link-claro" type="submit">Sair</button></form></div>{% endif %}</header>
+<div class="estrutura">{% if user.is_authenticated %}<nav class="menu" aria-label="Menu principal"><a href="{% url 'inicio' %}">Painel inicial</a><a href="{% url 'consulta' %}">Consultar por placa</a><a href="{% url 'cliente_novo' %}">Novo cliente</a><a href="{% url 'veiculo_novo' %}">Novo veículo</a><a href="{% url 'servico_novo' %}">Registrar serviço</a>{% if perms.core.view_movimentacaofinanceira %}<a href="{% url 'financeiro_resumo' %}">Financeiro</a>{% endif %}{% if perms.core.add_movimentacaofinanceira %}<a href="{% url 'financeiro_novo' %}">Nova movimentação</a>{% endif %}</nav>{% endif %}
+<main id="conteudo">{% if messages %}<div role="status" aria-live="polite">{% for message in messages %}<p class="aviso {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}{% block content %}{% endblock %}</main></div></body></html>
