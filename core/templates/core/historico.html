@@ -1,1 +1,29 @@
-{% extends 'core/base.html' %}{% block title %}Histórico do veículo · LGR{% endblock %}{% block content %}<div class="titulo"><p class="subtitulo">RESULTADO DA CONSULTA</p><h1>Histórico do veículo</h1></div>{% if veiculo %}<div class="aviso sucesso" role="status">✓ Veículo encontrado: {{ veiculo.placa }}</div><section class="card"><h2>{{ veiculo.marca }} {{ veiculo.modelo }}</h2><p><strong>Placa:</strong> {{ veiculo.placa }} {% if veiculo.cor %} · <strong>Cor:</strong> {{ veiculo.cor }}{% endif %}</p><h2>Serviços anteriores</h2>{% for servico in servicos %}<article class="servico"><h3>{{ servico.descricao }}</h3><p><strong>Data:</strong> {{ servico.data_servico|date:'d/m/Y' }} · <strong>Valor:</strong> R$ {{ servico.valor|floatformat:2 }}</p>{% if servico.observacoes %}<p>{{ servico.observacoes }}</p>{% endif %}</article>{% empty %}<p>Nenhum serviço registrado para este veículo.</p>{% endfor %}</section>{% else %}<section class="card"><p class="aviso erro" role="alert">Veículo não encontrado. Confira a placa e tente novamente.</p><p>Placa pesquisada: <strong>{{ placa }}</strong></p></section>{% endif %}<div class="acoes"><a class="btn" href="{% url 'consulta' %}">Nova consulta</a><a class="btn secundario" href="{% url 'inicio' %}">Voltar ao início</a></div>{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}Histórico do veículo · LGR{% endblock %}
+{% block content %}
+<div class="titulo"><p class="subtitulo">Resultado da consulta</p><h1>Histórico do veículo</h1><p>Consulte o que já foi feito e prepare o próximo atendimento.</p></div>
+{% if veiculo %}
+<div class="aviso sucesso" role="status">✓ Veículo encontrado: {{ veiculo.placa }}</div>
+<section class="card">
+  <div class="ficha-veiculo">
+    <div><span class="status-mini">Cadastro localizado</span><h2>{{ veiculo.marca }} {{ veiculo.modelo }}</h2><p>{% if veiculo.cor %}Cor: {{ veiculo.cor }}{% else %}Veículo cadastrado{% endif %}</p></div>
+    <span class="placa-tag" aria-label="Placa {{ veiculo.placa }}">{{ veiculo.placa }}</span>
+  </div>
+  <hr class="divisoria">
+  <h2>Serviços anteriores</h2>
+  <p>Registros de atendimentos associados a esta placa.</p>
+  <div class="lista-servicos">
+    {% for servico in servicos %}
+    <article class="servico">
+      <h3>{{ servico.descricao }}</h3>
+      <p class="meta"><strong>Data:</strong> {{ servico.data_servico|date:'d/m/Y' }} · <strong>Valor:</strong> R$ {{ servico.valor|floatformat:2 }}</p>
+      {% if servico.observacoes %}<p>{{ servico.observacoes }}</p>{% endif %}
+    </article>
+    {% empty %}<p>Nenhum serviço registrado para este veículo.</p>{% endfor %}
+  </div>
+</section>
+{% else %}
+<section class="card"><p class="aviso erro" role="alert">Veículo não encontrado. Confira a placa e tente novamente.</p><p>Placa pesquisada: <strong>{{ placa }}</strong></p></section>
+{% endif %}
+<div class="acoes"><a class="btn" href="{% url 'consulta' %}">Nova consulta</a><a class="btn secundario" href="{% url 'inicio' %}">Voltar ao início</a></div>
+{% endblock %}
