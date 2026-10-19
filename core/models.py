@@ -6,7 +6,7 @@ from django.db import models
 
 
 def normalizar_placa(valor):
-    return re.sub(r'[^A-Za-z0-9]', '', (valor or '')).upper()
+    return re.sub(r'[\s-]', '', (valor or '')).upper()
 
 
 def validar_placa(valor):
