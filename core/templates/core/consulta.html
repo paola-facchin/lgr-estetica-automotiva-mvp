@@ -1,1 +1,31 @@
-{% extends 'core/base.html' %}{% block title %}Consulta por placa · LGR{% endblock %}{% block content %}<div class="titulo"><p class="subtitulo">CONSULTA DE VEÍCULO</p><h1>Consultar histórico por placa</h1><p>Pesquise atendimentos anteriores usando a placa do automóvel.</p></div><section class="card"><form method="get" action="{% url 'consulta' %}" novalidate><div class="formgrupo"><label for="{{ form.placa.id_for_label }}">{{ form.placa.label }}</label>{{ form.placa }}<p class="ajuda" id="placa-ajuda">{{ form.placa.help_text }}</p>{% for error in form.placa.errors %}<p class="erro" role="alert">{{ error }}</p>{% endfor %}</div><div class="acoes"><button class="btn" type="submit">Pesquisar histórico</button><a class="btn secundario" href="{% url 'inicio' %}">Voltar ao início</a></div></form></section>{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}Consulta por placa · LGR{% endblock %}
+{% block content %}
+<div class="titulo"><p class="subtitulo">Consulta de veículo</p><h1>Consultar histórico por placa</h1><p>Encontre os atendimentos anteriores e agilize o próximo serviço.</p></div>
+<div class="conteudo-duplo">
+  <section class="card" aria-label="Formulário de consulta">
+    <h2>Identifique o veículo</h2>
+    <p>Informe a placa para consultar os serviços registrados.</p>
+    <form method="get" action="{% url 'consulta' %}" novalidate>
+      <div class="formgrupo">
+        <label for="{{ form.placa.id_for_label }}">{{ form.placa.label }}</label>
+        {{ form.placa }}
+        <p class="ajuda" id="placa-ajuda">{{ form.placa.help_text }}</p>
+        {% for error in form.placa.errors %}<p class="erro" role="alert">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="acoes">
+        <button class="btn" type="submit">Pesquisar histórico <span aria-hidden="true">→</span></button>
+        <a class="btn secundario" href="{% url 'inicio' %}">Voltar ao início</a>
+      </div>
+    </form>
+  </section>
+  <aside class="card card-ajuda" aria-labelledby="ajuda-titulo">
+    <h2 id="ajuda-titulo">Como funciona?</h2>
+    <ol class="passos">
+      <li><span class="passo-num" aria-hidden="true">01</span><span>Digite a placa antiga ou Mercosul, com ou sem hífen.</span></li>
+      <li><span class="passo-num" aria-hidden="true">02</span><span>Clique em <strong>Pesquisar histórico</strong> para localizar o veículo.</span></li>
+      <li><span class="passo-num" aria-hidden="true">03</span><span>Visualize os serviços, datas e valores registrados.</span></li>
+    </ol>
+  </aside>
+</div>
+{% endblock %}
