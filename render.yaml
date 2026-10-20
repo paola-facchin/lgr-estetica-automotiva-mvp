@@ -1,0 +1,37 @@
+# Infraestrutura de DEMONSTRACAO acadêmica: dados fictícios.
+# Render PostgreSQL gratuito expira em 30 dias; para uso real, contratar
+# banco persistente com backups e revisar segurança/privacidade.
+databases:
+  - name: lgr-mvp-db
+    databaseName: lgr_mvp
+    user: lgr_mvp
+    plan: free
+    postgresMajorVersion: "16"
+    ipAllowList: []
+
+services:
+  - type: web
+    name: lgr-estetica-automotiva-mvp
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn lgr.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /health/
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lgr-mvp-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_ENABLE_HSTS
+        value: "true"
+      # Render pedirá estas duas credenciais durante a criação do Blueprint.
+      # Nunca colocá-las no GitHub ou no chat.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
