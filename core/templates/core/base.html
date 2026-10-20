@@ -1,8 +1,86 @@
-{% load static %}<!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{% block title %}LGR Gestão{% endblock %}</title><link rel="stylesheet" href="{% static 'core/style.css' %}"></head>
-<body><a class="skip-link" href="#conteudo">Pular para conteúdo</a>
-<header class="topo"><div class="brand"><strong>LGR</strong><span>Estética Automotiva · Gestão</span></div>
-{% if user.is_authenticated %}<div class="usuario"><span>Usuário: {{ user.username }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="link-claro" type="submit">Sair</button></form></div>{% endif %}</header>
-<div class="estrutura">{% if user.is_authenticated %}<nav class="menu" aria-label="Menu principal"><a href="{% url 'inicio' %}">Painel inicial</a><a href="{% url 'consulta' %}">Consultar por placa</a><a href="{% url 'cliente_novo' %}">Novo cliente</a><a href="{% url 'veiculo_novo' %}">Novo veículo</a><a href="{% url 'servico_novo' %}">Registrar serviço</a>{% if perms.core.view_movimentacaofinanceira %}<a href="{% url 'financeiro_resumo' %}">Financeiro</a>{% endif %}{% if perms.core.add_movimentacaofinanceira %}<a href="{% url 'financeiro_novo' %}">Nova movimentação</a>{% endif %}</nav>{% endif %}
-<main id="conteudo">{% if messages %}<div role="status" aria-live="polite">{% for message in messages %}<p class="aviso {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}{% block content %}{% endblock %}</main></div></body></html>
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101f31">
+  <meta name="description" content="LGR Estética Automotiva — gestão de clientes, veículos e serviços.">
+  <title>{% block title %}LGR Gestão{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para conteúdo</a>
+  <header class="topo">
+    <a href="{% url 'inicio' %}" class="brand" aria-label="LGR Estética Automotiva, painel inicial">
+      <strong aria-hidden="true">LGR</strong>
+      <span class="brand-line" aria-hidden="true"></span>
+      <span>Estética Automotiva<br>Gestão operacional</span>
+    </a>
+    {% if user.is_authenticated %}
+    <div class="usuario">
+      <span class="usuario-nome">Usuário: {{ user.username }}</span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="link-claro" type="submit">Sair do sistema</button>
+      </form>
+    </div>
+    {% endif %}
+  </header>
+
+  <div class="estrutura{% if not user.is_authenticated %} sem-menu{% endif %}">
+    {% if user.is_authenticated %}
+    <nav class="menu" aria-label="Menu principal">
+      <p class="menu-grupo">Visão geral</p>
+      <a href="{% url 'inicio' %}" {% if request.resolver_match.url_name == 'inicio' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+        Painel inicial
+      </a>
+      <a href="{% url 'consulta' %}" {% if request.resolver_match.url_name == 'consulta' or request.resolver_match.url_name == 'historico' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg>
+        Consultar por placa
+      </a>
+      <p class="menu-grupo">Operações</p>
+      <a href="{% url 'cliente_novo' %}" {% if request.resolver_match.url_name == 'cliente_novo' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7.5" r="3.5"/><path d="M3.5 20v-2a5.5 5.5 0 0 1 11 0v2M18 9v7m-3.5-3.5h7"/></svg>
+        Novo cliente
+      </a>
+      <a href="{% url 'veiculo_novo' %}" {% if request.resolver_match.url_name == 'veiculo_novo' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 11 2-5h10l2 5M4 11h16v7H4zM7 18v2m10-2v2"/><circle cx="7.5" cy="14.5" r=".75"/><circle cx="16.5" cy="14.5" r=".75"/></svg>
+        Novo veículo
+      </a>
+      <a href="{% url 'servico_novo' %}" {% if request.resolver_match.url_name == 'servico_novo' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6zM9 4V2h6v2m-6 6h6m-6 4h6m-6 4h4"/></svg>
+        Registrar serviço
+      </a>
+      {% if perms.core.view_movimentacaofinanceira or perms.core.add_movimentacaofinanceira %}
+      <p class="menu-grupo">Administração</p>
+      {% endif %}
+      {% if perms.core.view_movimentacaofinanceira %}
+      <a href="{% url 'financeiro_resumo' %}" {% if request.resolver_match.url_name == 'financeiro_resumo' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M6 16V9m6 7V5m6 11v-5"/></svg>
+        Financeiro
+      </a>
+      {% endif %}
+      {% if perms.core.add_movimentacaofinanceira %}
+      <a href="{% url 'financeiro_novo' %}" {% if request.resolver_match.url_name == 'financeiro_novo' %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18m-9 3v5m-2.5-2.5h5"/></svg>
+        Nova movimentação
+      </a>
+      {% endif %}
+      <div class="menu-nota"><strong>LGR · Gestão</strong>Informações organizadas para uma operação mais eficiente.</div>
+    </nav>
+    {% endif %}
+    <main id="conteudo" tabindex="-1">
+      {% if messages %}
+      <div role="status" aria-live="polite">
+        {% for message in messages %}
+        <p class="aviso {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

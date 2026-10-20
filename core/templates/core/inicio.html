@@ -1,3 +1,50 @@
-{% extends 'core/base.html' %}{% block content %}<div class="titulo"><p class="subtitulo">PAINEL INICIAL</p><h1>Bem-vindo à gestão da LGR</h1><p>Organize clientes, veículos, serviços e finanças em um só lugar.</p></div>
-<section class="card destaque" aria-labelledby="consulta-titulo"><h2 id="consulta-titulo">Encontre um histórico em poucos passos</h2><p>Use a placa para consultar os serviços já realizados em um veículo.</p><a class="btn" href="{% url 'consulta' %}">Consultar histórico por placa →</a></section>
-<section class="grade" aria-label="Acesso aos cadastros"><a class="card card-link" href="{% url 'cliente_novo' %}"><h2>Clientes</h2><p>Cadastrar um cliente</p></a><a class="card card-link" href="{% url 'veiculo_novo' %}"><h2>Veículos</h2><p>Cadastrar um veículo</p></a><a class="card card-link" href="{% url 'servico_novo' %}"><h2>Serviços</h2><p>Registrar atendimento</p></a>{% if perms.core.view_movimentacaofinanceira %}<a class="card card-link" href="{% url 'financeiro_resumo' %}"><h2>Financeiro</h2><p>Consultar receitas e despesas</p></a>{% endif %}</section>{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}Painel inicial · LGR{% endblock %}
+{% block content %}
+<div class="titulo">
+  <p class="subtitulo">Painel operacional</p>
+  <h1>Bem-vindo à gestão da LGR</h1>
+  <p>Os processos do dia a dia, organizados em um só lugar.</p>
+</div>
+
+<section class="card destaque" aria-labelledby="consulta-titulo">
+  <div class="destaque-conteudo">
+    <span class="destaque-etiqueta">Acesso rápido</span>
+    <h2 id="consulta-titulo">Encontre um histórico em poucos passos</h2>
+    <p>Consulte os serviços já realizados em um veículo usando apenas a placa. Mais agilidade no próximo atendimento.</p>
+    <a class="btn btn-destaque" href="{% url 'consulta' %}">Consultar histórico por placa <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="destaque-visual" aria-hidden="true">
+    <svg viewBox="0 0 80 80"><circle cx="35" cy="35" r="23"/><path d="m52 52 17 17M22 30h26M26 39h18M30 47h10"/></svg>
+  </div>
+</section>
+
+<div class="secao-cabecalho">
+  <div><h2>O que você deseja fazer?</h2><p>Acesse rapidamente as principais operações da empresa.</p></div>
+</div>
+<section class="grade" aria-label="Acesso aos cadastros">
+  <a class="card card-link" href="{% url 'cliente_novo' %}">
+    <span class="icone-card" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M18 10v8m-4-4h8"/></svg></span>
+    <span class="seta" aria-hidden="true">↗</span>
+    <h2>Clientes</h2><p>Cadastrar um novo cliente</p>
+  </a>
+  <a class="card card-link" href="{% url 'veiculo_novo' %}">
+    <span class="icone-card" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 11 2-5h10l2 5M4 11h16v7H4zM7 18v2m10-2v2"/><circle cx="7" cy="14.5" r=".8"/><circle cx="17" cy="14.5" r=".8"/></svg></span>
+    <span class="seta" aria-hidden="true">↗</span>
+    <h2>Veículos</h2><p>Cadastrar um veículo</p>
+  </a>
+  <a class="card card-link" href="{% url 'servico_novo' %}">
+    <span class="icone-card" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v17H6zM9 4V2h6v2m-6 6h6m-6 4h6m-6 4h5"/></svg></span>
+    <span class="seta" aria-hidden="true">↗</span>
+    <h2>Serviços</h2><p>Registrar um atendimento</p>
+  </a>
+  {% if perms.core.view_movimentacaofinanceira %}
+  <a class="card card-link" href="{% url 'financeiro_resumo' %}">
+    <span class="icone-card" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16V9m6 7V4m6 12v-5"/></svg></span>
+    <span class="seta" aria-hidden="true">↗</span>
+    <h2>Financeiro</h2><p>Consultar receitas e despesas</p>
+  </a>
+  {% endif %}
+</section>
+<div class="faixa-info"><strong>Fluxo simplificado:</strong> cadastre o cliente, associe o veículo e registre cada serviço para construir um histórico consultável.</div>
+{% endblock %}

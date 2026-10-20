@@ -1,0 +1,44 @@
+name: Monitoramento - LGR online
+
+on:
+  schedule:
+    # Execucao aproximadamente uma vez por hora, quando a branch main esta ativa.
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar-disponibilidade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      LGR_PUBLIC_URL: ${{ vars.LGR_PUBLIC_URL }}
+    steps:
+      - name: Verificar URL de producao configurada
+        run: |
+          if [[ -z "$LGR_PUBLIC_URL" ]]; then
+            echo "::error::Configure a variavel LGR_PUBLIC_URL em Settings > Secrets and variables > Actions > Variables."
+            exit 1
+          fi
+          if [[ "$LGR_PUBLIC_URL" != https://* ]]; then
+            echo "::error::A URL deve comecar por https://."
+            exit 1
+          fi
+
+      - name: Consultar a aplicacao e o banco no endpoint /health/
+        run: |
+          echo "Iniciando verificacao: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          status=$(curl --location --silent --show-error --max-time 150 --connect-timeout 25 \
+            --output /tmp/lgr-health.json --write-out '%{http_code}' \
+            "${LGR_PUBLIC_URL%/}/health/") || {
+              echo "::error::Sem resposta do servidor. Possivel indisponibilidade (DOWN)."
+              exit 1
+            }
+          if [[ "$status" == "200" ]] && grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' /tmp/lgr-health.json; then
+            echo "UP: HTTP 200 e banco operacional."
+          else
+            echo "::error::DOWN: HTTP $status ou verificacao de banco com falha."
+            exit 1
+          fi
