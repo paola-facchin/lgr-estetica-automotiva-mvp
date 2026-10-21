@@ -1,6 +1,10 @@
 name: Monitoramento - LGR online
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/monitoramento.yml"
   schedule:
     # Execucao aproximadamente uma vez por hora, quando a branch main esta ativa.
     - cron: "23 * * * *"
@@ -14,14 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      LGR_PUBLIC_URL: ${{ vars.LGR_PUBLIC_URL }}
+      LGR_PUBLIC_URL: ${{ vars.LGR_PUBLIC_URL || 'https://lgr-estetica-automotiva-mvp.onrender.com' }}
     steps:
       - name: Verificar URL de producao configurada
         run: |
-          if [[ -z "$LGR_PUBLIC_URL" ]]; then
-            echo "::error::Configure a variavel LGR_PUBLIC_URL em Settings > Secrets and variables > Actions > Variables."
-            exit 1
-          fi
           if [[ "$LGR_PUBLIC_URL" != https://* ]]; then
             echo "::error::A URL deve comecar por https://."
             exit 1
